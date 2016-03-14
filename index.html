@@ -34,9 +34,7 @@
           <!-- chat output box  -->
           <div class=" row chat-box">
             <div class="chatting" >
-              <ul>
-                <li>jjjj</li>
-              </ul>
+            <!-- append p tag with output -->
             </div>
 
           </div>
@@ -72,7 +70,7 @@
 
     // client recieving from server
     socket.on('message', function(data){
-
+      insertMessage(data);
     });
 
     // jquery to retrieve text
