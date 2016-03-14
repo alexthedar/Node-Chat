@@ -1,0 +1,38 @@
+
+body { background: black !important;}
+
+.chat-box{
+  height: 500px;
+  background-color: red;
+}
+
+.big-box {
+  height: 650px;
+}
+
+input[type="text"] {
+    box-sizing: border-box;
+}
+
+.navbar-header {
+    float: left;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+.navbar-brand {float:none;}
+
+.chatters {
+  background-color: blue;
+  height: 100%;
+}
+
+.input-box {
+  background-color: yellow;
+  height: 100%;
+}
+
+.inoutbox {
+  background-color: green;
+  height: 100%;
+}

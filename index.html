@@ -3,9 +3,65 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    
+    <!-- sandstone bootswatch cdn -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
   </head>
   <body>
+    <nav class="navbar navbar-inverse">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Alexthedar NodeJS Chat</a>
+      </div>
+    </nav>
+    <div class="container ">
 
+      <!-- large container -->
+      <div class="big-box well row">
+
+        <!-- chatters -->
+        <div class="col-md-2 chatters">
+          <ul>
+            <li>hh</li>
+          </ul>
+        </div>
+
+        <!-- begin chat input/output -->
+        <div class="col-md-10 inoutbox">
+
+          <!-- chat output box  -->
+          <div class=" row chat-box">
+
+
+          </div>
+
+          <!--Chat input field  -->
+          <div class="input-box row">
+            <div class="col-md-12">
+              <div class="input-group">
+                <input type="text" class='form-control' placeholder='Type here...' />
+                <span class=input-group-btn>
+                  <button class='btn btn-info' type='button'>Send</button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- end chat output/input -->
+        </div>
+        <!-- end of big box -->
+      </div>
+      <!-- en of container -->
+    </div>
+
+
+    <!-- call socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    var socket = io.connect('http://localhost:8080');
+    socket.on('message', function(data){
+    });
+  </script>
   </body>
 </html>
