@@ -34,7 +34,8 @@
           <!-- chat output box  -->
           <div class=" row chat-box">
             <div class="chatting" >
-            <!-- append p tag with output -->
+              <!-- append p tag with output -->
+
             </div>
 
           </div>
@@ -73,18 +74,18 @@
       insertMessage(data);
     });
 
+    function insertMessage(data){
+      $('.chatting').append("<p> "+ data +" </p>");
+    };
+
     // jquery to retrieve text
     $(function(){
       $('form#chat-form').submit(function(e){
         e.preventDefault();
-        var message = $('#chat-text').val();
-        socket.emit('messages', message);
+        var chat = $('#chat-text').val();
+        socket.emit('message', chat);
         $('#chat-text').val('');
       });
-
-      function insertMessage(data){
-        $('.chatting').append("<p> "+ data +" </p>");
-      };
     });
 
   </script>
