@@ -42,14 +42,16 @@
           </div>
 
           <!--Chat input field  -->
-            <div class="row input-box parent">
-              <div class="input-group child">
-                <input type="text" class='form-control input-lg' placeholder='Type here...' />
-                <span class=input-group-btn>
-                  <button class='btn btn-info input-lg' type='button'>Send</button>
-                </span>
+          <form class="form-group" id="chat-form">
+              <div class="row input-box parent">
+                <div class="input-group child" >
+                  <input type="text" class='form-control input-lg'   id="chat-text" placeholder='Type here...' />
+                  <span class=input-group-btn>
+                    <button class='btn btn-info input-lg' type='submit'>Send</button>
+                  </span>
+                </div>
               </div>
-            </div>
+          </form>
 
           <!-- end chat output/input -->
         </div>
@@ -58,14 +60,23 @@
       <!-- end of container -->
     </div>
 
-
-    <!-- call socket.io -->
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <!-- call socket.io -->
   <script src="/socket.io/socket.io.js"></script>
 
+  <!-- my js - move to js file? -->
   <script>
     var socket = io.connect('http://localhost:8080');
     socket.on('message', function(data){
     });
+    $('form#chat-form').submit(function(e){
+      event.preventDefault();
+      var message = $('#chat-text').val();
+      socket.emit('messages', message);
+      $('#chat-text').val('');
+    });
+
   </script>
   </body>
 </html>
