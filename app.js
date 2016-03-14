@@ -17,8 +17,13 @@ server.listen(8080);
 io.on('connection', function(client){
   console.log('client connected');
 
+  client.on('join', function(name){
+    client.username=name;
+  })
+
   client.on('message', function(data){
-    client.broadcast.emit('message', data);
-    client.emit('message',data);
+    var username = client.username;
+    client.broadcast.emit('message', username + ": " + data);
+    client.emit('message', username + ": " + data);
   });
 });

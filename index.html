@@ -67,10 +67,17 @@
   <!-- my js - move to js file? -->
   <script>
     // connect socket
-    var socket = io.connect('http://localhost:8080');
+    var server = io.connect('http://localhost:8080');
+
+    // on connection make username and status
+    server.on('connect', function(data){
+        $('#status').html('Connected');
+        username = prompt("What is your name?");
+        server.emit('join', username);
+    });
 
     // client recieving from server
-    socket.on('message', function(data){
+    server.on('message', function(data){
       insertMessage(data);
     });
 
@@ -83,7 +90,7 @@
       $('form#chat-form').submit(function(e){
         e.preventDefault();
         var chat = $('#chat-text').val();
-        socket.emit('message', chat);
+        server.emit('message', chat);
         $('#chat-text').val('');
       });
     });
