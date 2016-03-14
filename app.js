@@ -11,8 +11,8 @@ var io = require('socket.io')(server);
 
 io.on('connection', function(client){
   console.log('client connected');
-  client.emit('message', {hello: 'world'});
   client.on('messages', function(data){
+    client.broadcast.emit('message', data);
     console.log(data);
   });
 });

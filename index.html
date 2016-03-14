@@ -33,7 +33,7 @@
 
           <!-- chat output box  -->
           <div class=" row chat-box">
-            <div class="chatting">
+            <div class="chatting" >
               <ul>
                 <li>jjjj</li>
               </ul>
@@ -67,14 +67,26 @@
 
   <!-- my js - move to js file? -->
   <script>
+    // connect socket
     var socket = io.connect('http://localhost:8080');
+
+    // client recieving from server
     socket.on('message', function(data){
+
     });
-    $('form#chat-form').submit(function(e){
-      event.preventDefault();
-      var message = $('#chat-text').val();
-      socket.emit('messages', message);
-      $('#chat-text').val('');
+
+    // jquery to retrieve text
+    $(function(){
+      $('form#chat-form').submit(function(e){
+        e.preventDefault();
+        var message = $('#chat-text').val();
+        socket.emit('messages', message);
+        $('#chat-text').val('');
+      });
+
+      function insertMessage(data){
+        $('.chatting').append("<p> "+ data +" </p>");
+      };
     });
 
   </script>
