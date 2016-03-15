@@ -11,7 +11,7 @@
   <body>
     <nav class="navbar navbar-inverse">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#"><span id="status"></span></a>
+        <a class="navbar-brand" href="#"><span id="status"></span><span id="newbie"></span></a>
       </div>
     </nav>
     <div class="container ">
@@ -22,8 +22,7 @@
         <!-- chatters -->
         <div class="col-md-2 chatters">
           <div class="names">
-            <ul>
-              <li>hh</li>
+            <ul id="chatters">
             </ul>
           </div>
         </div>
@@ -66,6 +65,8 @@
 
   <!-- my js - move to js file? -->
   <script>
+
+    var username;
     // connect socket
     var server = io.connect('http://localhost:8080');
 
@@ -73,7 +74,6 @@
     server.on('connect', function(data){
         username = prompt("What is your name?");
         server.emit('join', username);
-        statusConnected(username);
     });
 
     // client recieving from server
@@ -81,18 +81,46 @@
       insertMessage(data);
     });
 
-    function statusConnected(name){
-      $('#status').html(name + ": Connected");
-    }
+    server.on('duplicate name', function(name){
+      username = prompt(name + " is already taken.  Please choose a different name.")
+      server.emit('join', username);
 
-    // function statusUpdate(name, username){
-    //   $('#status').html(name + " has joined.");
-    //   window.setTimeout(statusConnected(username), 2000);
-    // }
+    })
+
+    server.on('add chatter', function(name){
+      var chatter = $('<li>' + name + '</li>').data('name', name);
+      $('#chatters').append(chatter);
+    })
+
+    server.on('remove chatter', function(){
+      $('#chatters li[data-name='+username+']').remove();
+      insertMessage(username + " has left");
+    });
+
+    server.on('join room', function(name){
+      setConnected(name);
+      insertMessage(name + ' has joined.')
+    });
+
+    server.on('new chatter', function(name){
+      username = username;
+
+      insertMessage(name + ' has joined.')
+      $('#status').html(name + " has joined.");
+      setTimeout(function() {
+        $('#status').html("You are connect as "+name);
+      }, 3000);
+    });
 
     function insertMessage(data){
       $('.chatting').prepend("<p> "+ data +" </p>");
     };
+
+    function setConnected(name){
+      $('#status').html("You are connect as "+name);
+    }
+
+
 
     // jquery to retrieve text
     $(function(){
@@ -102,6 +130,7 @@
         server.emit('message', chat);
         $('#chat-text').val('');
       });
+
     });
 
   </script>
