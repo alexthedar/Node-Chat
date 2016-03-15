@@ -11,7 +11,7 @@
   <body>
     <nav class="navbar navbar-inverse">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Alexthedar NodeJS Chat</a>
+        <a class="navbar-brand" href="#"><span id="status"></span></a>
       </div>
     </nav>
     <div class="container ">
@@ -71,9 +71,9 @@
 
     // on connection make username and status
     server.on('connect', function(data){
-        $('#status').html('Connected');
         username = prompt("What is your name?");
         server.emit('join', username);
+        statusConnected(username);
     });
 
     // client recieving from server
@@ -81,8 +81,17 @@
       insertMessage(data);
     });
 
+    function statusConnected(name){
+      $('#status').html(name + ": Connected");
+    }
+
+    // function statusUpdate(name, username){
+    //   $('#status').html(name + " has joined.");
+    //   window.setTimeout(statusConnected(username), 2000);
+    // }
+
     function insertMessage(data){
-      $('.chatting').append("<p> "+ data +" </p>");
+      $('.chatting').prepend("<p> "+ data +" </p>");
     };
 
     // jquery to retrieve text
