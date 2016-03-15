@@ -16,34 +16,69 @@ app.get('/', function(req, res){
 
 server.listen(8080);
 
-var storeMessage = function(name, data){
-  var message = JSON.stringify({name:name,data:data});
+var storeMessage =  function(name, data){
+                      var message = JSON.stringify({name:name,data:data});
 
-  redisClient.lpush("messages", message, function(err, res){
-    redisClient.ltrim("messages",0,9);
+                      redisClient.lpush("messages", message, function(err, res){
+                        redisClient.ltrim("messages",0,9);
+                      });
+                    };
+
+var currentChatters=[];
+redisClient.smembers('chatters',function(err, allNames){
+  if (err) throw (err);
+  allNames.forEach(function(name){
+    currentChatters.push(name);
   });
+});
+
+
+function checkChatterArr(myName){
+  myName = myName;
+  var check = true;
+  currentChatters.forEach(function(name){
+    if (myName == name){
+      check = false;
+    }
+  });
+  return check;
+};
+
+function removeChatterArr(myName){
+  var index = currentChatters.indexOf(myName);
+  if (index > -1) {
+    currentChatters.splice(index, 1);
+  };
 };
 
 
 io.on('connection', function(client){
+
   console.log('client connected');
 
-  client.on('join', function(myName){
+  client.on('name check', function(myName){
 
-    if (checkName(myName) === 0){
+    //validation on a framework works better than this
+    if(myName === null || "" ){
+      client.emit('no name');
+    }
+
+    //check for dupes
+    if(checkChatterArr(myName) == false){
       client.emit('duplicate name', myName)
     } else {
-      listChatters(client);
+      //join room
       joinRoom(myName, client);
       getMessages(client);
-    };
-
-    client.username=myName;
+      client.username=myName;
+    }
   });
 
-  client.on('disconnect', function(name){
-    client.broadcast.emit('remove chatter', name);
-    redisClient.srem('chatters', name);
+  client.on('disconnect', function(){
+    client.broadcast.emit('remove chatter', client.username);
+    client.emit('remove chatter', client.username);
+    redisClient.srem('chatters', client.username);
+    removeChatterArr(client.username);
   });
 
   client.on('message', function(data){
@@ -54,15 +89,12 @@ io.on('connection', function(client){
   });
 });
 
-function checkName(myName){
-  var check = redisClient.sadd('chatters', myName);
-  return check;
-};
-
 function listChatters(client){
   redisClient.smembers('chatters',function(err, allNames){
+    allNames.reverse();
     allNames.forEach(function(name){
       client.emit('add chatter', name);
+      client.broadcast.emit('add chatter', name);
     });
   });
 };
@@ -71,7 +103,9 @@ function joinRoom(myName, client){
   client.broadcast.emit('new chatter', myName);
   client.emit('join room', myName);
   console.log(myName + " has joined");
+  currentChatters.push(myName);
   redisClient.sadd('chatters', myName);
+  listChatters(client);
 };
 
 function getMessages(client){

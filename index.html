@@ -73,8 +73,13 @@
     // on connection make username and status
     server.on('connect', function(data){
         username = prompt("What is your name?");
-        server.emit('join', username);
+        server.emit('name check', username);
     });
+
+    server.on('no name', function(){
+      username = prompt("Please enter a name.")
+      server.emit('name check', username);
+    })
 
     // client recieving from server
     server.on('message', function(data){
@@ -83,18 +88,17 @@
 
     server.on('duplicate name', function(name){
       username = prompt(name + " is already taken.  Please choose a different name.")
-      server.emit('join', username);
-
+      server.emit('name check', username);
     })
 
     server.on('add chatter', function(name){
       var chatter = $('<li>' + name + '</li>').data('name', name);
-      $('#chatters').append(chatter);
+      $('#chatters').prepend(chatter);
     })
 
-    server.on('remove chatter', function(){
-      $('#chatters li[data-name='+username+']').remove();
-      insertMessage(username + " has left");
+    server.on('remove chatter', function(name){
+      $('#chatters li[data-name='+name+']').remove();
+      insertMessage(name + " has left");
     });
 
     server.on('join room', function(name){
