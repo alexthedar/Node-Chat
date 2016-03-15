@@ -4,20 +4,20 @@ Creating a simple chat server using node and express.
 
 #Installation
 
-In terminal clone repo to **your directory**:
+1.In terminal clone repo to your directory:
 
 git clone https://github.com/alexthedar/nodejschat.git
 
-Change to that directory:
-cd **your directory**
+2.Change to that directory:
+cd your directory
 
-Install dependencies:  
+3.Install dependencies:  
 npm install
 
-Run node
+4.Run node
 node app.js
 
-Go to page in browser:
+5.Go to page in browser:
 http://localhost:8080/
 
 #Abilities
