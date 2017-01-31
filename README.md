@@ -14,8 +14,8 @@ cd your directory
 3.Install dependencies:  
 npm install
 
-4.Run node
-node app.js
+4.Run 
+npm start
 
 5.Go to page in browser:
 http://localhost:8080/
